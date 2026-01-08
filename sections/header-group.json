@@ -11,12 +11,21 @@
   "type": "header",
   "name": "t:general.header",
   "sections": {
+    "announcement-bar": {
+      "type": "announcement-bar",
+      "settings": {
+        "text": "Special offer! Free delivery worldwide",
+        "background_color": "#000000",
+        "text_color": "#FFFFFF"
+      }
+    },
     "header": {
       "type": "header",
       "settings": {}
     }
   },
   "order": [
+    "announcement-bar",
     "header"
-  ],
+  ]
 }

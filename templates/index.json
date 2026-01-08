@@ -9,12 +9,58 @@
  */
 {
   "sections": {
+    "hero-slideshow": {
+      "type": "hero-slideshow",
+      "blocks": {
+        "slide-1": {
+          "type": "slide",
+          "settings": {
+            "heading": "Discover Your Glow",
+            "text": "Premium skincare products for radiant skin",
+            "button_label": "Shop Now",
+            "button_url": "/collections/all"
+          }
+        },
+        "slide-2": {
+          "type": "slide",
+          "settings": {
+            "heading": "Natural Beauty",
+            "text": "Organic ingredients for healthy skin",
+            "button_label": "Learn More",
+            "button_url": "/pages/about"
+          }
+        },
+        "slide-3": {
+          "type": "slide",
+          "settings": {
+            "heading": "New Arrivals",
+            "text": "Check out our latest products",
+            "button_label": "View Collection",
+            "button_url": "/collections/new"
+          }
+        }
+      },
+      "block_order": [
+        "slide-1",
+        "slide-2",
+        "slide-3"
+      ],
+      "settings": {
+        "height": 600,
+        "mobile_height": 400,
+        "text_color": "#FFFFFF",
+        "button_background": "#000000",
+        "button_text_color": "#FFFFFF",
+        "autoplay_speed": 5
+      }
+    },
     "main": {
       "type": "hello-world",
       "settings": {}
     }
   },
   "order": [
+    "hero-slideshow",
     "main"
   ]
 }

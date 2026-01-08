@@ -1,0 +1,110 @@
+{% comment %}
+  Announcement Bar Section
+  A top bar for displaying promotions, announcements, or important messages.
+{% endcomment %}
+
+<div class="announcement-bar full-width" style="
+  --announcement-bg: {{ section.settings.background_color }};
+  --announcement-text: {{ section.settings.text_color }};
+">
+  <div class="announcement-bar__content">
+    {% if section.settings.text != blank %}
+      {% if section.settings.link != blank %}
+        <a href="{{ section.settings.link }}" class="announcement-bar__link">
+          {{ section.settings.text }}
+        </a>
+      {% else %}
+        {{ section.settings.text }}
+      {% endif %}
+    {% endif %}
+  </div>
+</div>
+
+{% stylesheet %}
+  .announcement-bar {
+    background-color: var(--announcement-bg);
+    color: var(--announcement-text);
+    font-size: 0.875rem;
+    text-align: center;
+    position: relative;
+    z-index: 10;
+  }
+
+  .announcement-bar__content {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0.75rem var(--page-margin);
+    max-width: var(--page-width);
+    margin: 0 auto;
+  }
+
+  .announcement-bar__link {
+    color: inherit;
+    text-decoration: none;
+    transition: var(--transition-smooth);
+  }
+
+  .announcement-bar__link:hover {
+    opacity: 0.8;
+  }
+
+  /* Mobile Responsive */
+  @media (max-width: 768px) {
+    .announcement-bar__content {
+      padding: var(--spacing-sm) var(--page-margin);
+      font-size: 0.8125rem;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Announcement Bar",
+  "class": "section-announcement-bar",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "text",
+      "id": "text",
+      "label": "Announcement text",
+      "default": "Special offer! Free delivery worldwide"
+    },
+    {
+      "type": "url",
+      "id": "link",
+      "label": "Link (optional)",
+      "info": "Make the announcement clickable"
+    },
+    {
+      "type": "header",
+      "content": "Style"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background color",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text color",
+      "default": "#FFFFFF"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Announcement Bar",
+      "settings": {
+        "text": "Special offer! Free delivery worldwide",
+        "background_color": "#000000",
+        "text_color": "#FFFFFF"
+      }
+    }
+  ]
+}
+{% endschema %}

@@ -1,20 +1,47 @@
 <header>
+  <button class="header__hamburger" aria-label="Open menu">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <line x1="3" y1="6" x2="21" y2="6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+      <line x1="3" y1="12" x2="21" y2="12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+      <line x1="3" y1="18" x2="21" y2="18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+    </svg>
+  </button>
+
   <h2 class="header__title">
     {{ shop.name | link_to: routes.root_url }}
   </h2>
 
-  <div class="header__menu">
-    {% for link in section.settings.menu.links %}
-      {{ link.title | link_to: link.url }}
-    {% endfor %}
-  </div>
-
   <div class="header__icons">
+    {% form 'currency' %}
+      <select name="currency" class="header__currency-selector" onchange="this.form.submit();">
+        {% for currency in localization.available_currencies %}
+          <option value="{{ currency.iso_code }}" {% if currency.iso_code == localization.currency.iso_code %}selected{% endif %}>
+            {{ currency.iso_code }} {{ currency.symbol }}
+          </option>
+        {% endfor %}
+      </select>
+    {% endform %}
+
     {% if shop.customer_accounts_enabled %}
-      {{ 'icon-account.svg' | inline_asset_content | link_to: routes.account_url }}
+      {% if customer %}
+        <a href="{{ routes.account_url }}" class="header__account-link" title="Account">
+          {{ 'icon-account.svg' | inline_asset_content }}
+        </a>
+      {% else %}
+        <a href="{{ routes.account_login_url }}" class="header__account-link" title="Account">
+          {{ 'icon-account.svg' | inline_asset_content }}
+        </a>
+      {% endif %}
     {% endif %}
 
-    <a href="{{ routes.cart_url }}">
+    <a href="{{ routes.search_url }}" class="header__search-link" title="Search">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="11" cy="11" r="8" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M21 21l-4.35-4.35" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </a>
+
+    <a href="{{ routes.cart_url }}" class="header__cart-link" title="Cart">
       {% if cart.item_count > 0 %}
         <sup>{{ cart.item_count }}</sup>
       {% endif %}
@@ -22,7 +49,59 @@
       {{ 'icon-cart.svg' | inline_asset_content }}
     </a>
   </div>
+
+  <div class="header__drawer">
+    <div class="header__drawer-overlay"></div>
+    <div class="header__drawer-content">
+      <button class="header__drawer-close" aria-label="Close menu">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <line x1="18" y1="6" x2="6" y2="18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          <line x1="6" y1="6" x2="18" y2="18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+      </button>
+      <nav class="header__drawer-menu">
+        {% if section.settings.menu != blank %}
+          {% for link in section.settings.menu.links %}
+            <a href="{{ link.url }}" class="header__drawer-link">{{ link.title }}</a>
+          {% endfor %}
+        {% else %}
+          <p class="header__drawer-empty">{{ 'general.menu_empty' | t }}</p>
+        {% endif %}
+      </nav>
+    </div>
+  </div>
 </header>
+
+<script>
+  (function() {
+    const hamburger = document.querySelector('.header__hamburger');
+    const drawer = document.querySelector('.header__drawer');
+    const drawerClose = document.querySelector('.header__drawer-close');
+    const drawerOverlay = document.querySelector('.header__drawer-overlay');
+
+    if (!hamburger || !drawer || !drawerClose || !drawerOverlay) return;
+
+    function openDrawer() {
+      drawer.classList.add('is-open');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeDrawer() {
+      drawer.classList.remove('is-open');
+      document.body.style.overflow = '';
+    }
+
+    hamburger.addEventListener('click', openDrawer);
+    drawerClose.addEventListener('click', closeDrawer);
+    drawerOverlay.addEventListener('click', closeDrawer);
+
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape' && drawer.classList.contains('is-open')) {
+        closeDrawer();
+      }
+    });
+  })();
+</script>
 
 {% stylesheet %}
   header {
@@ -30,11 +109,119 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
+    gap: 1rem;
+    position: relative;
+  }
+  header .header__hamburger {
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    color: var(--color-foreground);
+    display: flex;
+    align-items: center;
+    z-index: 1;
+  }
+  header .header__hamburger svg {
+    width: 2rem;
+    height: 2rem;
+  }
+  header .header__title {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    margin: 0;
+    padding: 0;
+    font-size: 1.5rem;
+    font-weight: 600;
+  }
+  header .header__icons {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-left: auto;
+  }
+  header .header__drawer {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1000;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+  header .header__drawer.is-open {
+    pointer-events: all;
+    opacity: 1;
+  }
+  header .header__drawer-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+  }
+  header .header__drawer-content {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 80%;
+    max-width: 400px;
+    height: 100%;
+    background: var(--color-background);
+    transform: translateX(-100%);
+    transition: transform 0.3s ease;
+    padding: 2rem;
+    overflow-y: auto;
+  }
+  header .header__drawer.is-open .header__drawer-content {
+    transform: translateX(0);
+  }
+  header .header__drawer-close {
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    color: var(--color-foreground);
+    display: flex;
+    align-items: center;
+    margin-bottom: 2rem;
+  }
+  header .header__drawer-close svg {
+    width: 2rem;
+    height: 2rem;
+  }
+  header .header__drawer-menu {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+  header .header__drawer-link {
+    color: var(--color-foreground);
+    text-decoration: none;
+    font-size: 1.5rem;
+    font-weight: 600;
+    padding: 0.5rem 0;
+    display: block;
+  }
+  header .header__drawer-link:hover {
+    opacity: 0.7;
+  }
+  header .header__drawer-empty {
+    color: var(--color-foreground);
+    opacity: 0.6;
+    font-size: 0.875rem;
   }
   header a {
     position: relative;
     text-decoration: none;
     color: var(--color-foreground);
+    display: inline-flex;
+    align-items: center;
+    line-height: 2rem;
   }
   header a sup {
     position: absolute;
@@ -48,7 +235,23 @@
   header .header__menu,
   header .header__icons {
     display: flex;
+    align-items: center;
     gap: 1rem;
+  }
+  header .header__text-link {
+    font-size: 0.875rem;
+    font-weight: 500;
+  }
+  header .header__currency-selector {
+    font-size: 0.875rem;
+    border: none;
+    background: transparent;
+    color: var(--color-foreground);
+    cursor: pointer;
+    padding: 0;
+  }
+  header form {
+    margin: 0;
   }
 {% endstylesheet %}
 
@@ -59,7 +262,8 @@
     {
       "type": "link_list",
       "id": "menu",
-      "label": "t:labels.menu"
+      "label": "t:labels.menu",
+      "default": "main-menu"
     }
   ]
 }

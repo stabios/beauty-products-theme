@@ -1,0 +1,441 @@
+{% style %}
+  #hero-slideshow-{{ section.id }} {
+    height: {{ section.settings.height }}px;
+  }
+
+  #hero-slideshow-{{ section.id }} .hero-slideshow__content {
+    color: {{ section.settings.text_color }};
+  }
+
+  #hero-slideshow-{{ section.id }} .hero-slideshow__button {
+    background: {{ section.settings.button_background }};
+    color: {{ section.settings.button_text_color }};
+  }
+
+  @media (max-width: 768px) {
+    #hero-slideshow-{{ section.id }} {
+      height: {{ section.settings.mobile_height }}px;
+    }
+  }
+{% endstyle %}
+
+<div id="hero-slideshow-{{ section.id }}" class="hero-slideshow full-width">
+  <div class="hero-slideshow__slides">
+    {% for block in section.blocks %}
+      <div class="hero-slideshow__slide" {{ block.shopify_attributes }}>
+        {% if block.settings.image != blank %}
+          <div class="hero-slideshow__image">
+            {{ block.settings.image | image_url: width: 2000 | image_tag: loading: 'lazy' }}
+          </div>
+        {% endif %}
+
+        <div class="hero-slideshow__content">
+          {% if block.settings.heading != blank %}
+            <h2 class="hero-slideshow__heading">{{ block.settings.heading }}</h2>
+          {% endif %}
+
+          {% if block.settings.text != blank %}
+            <p class="hero-slideshow__text">{{ block.settings.text }}</p>
+          {% endif %}
+
+          {% if block.settings.button_label != blank and block.settings.button_url != blank %}
+            <a href="{{ block.settings.button_url }}" class="hero-slideshow__button">
+              {{ block.settings.button_label }}
+            </a>
+          {% endif %}
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+
+  {% if section.blocks.size > 1 %}
+    <button class="hero-slideshow__arrow hero-slideshow__arrow--prev" aria-label="Previous slide">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M15 18l-6-6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </button>
+
+    <button class="hero-slideshow__arrow hero-slideshow__arrow--next" aria-label="Next slide">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M9 18l6-6-6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </button>
+
+    <div class="hero-slideshow__dots">
+      {% for block in section.blocks %}
+        <button class="hero-slideshow__dot" aria-label="Go to slide {{ forloop.index }}"></button>
+      {% endfor %}
+    </div>
+  {% endif %}
+</div>
+
+{% stylesheet %}
+  .hero-slideshow {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+  }
+
+  .hero-slideshow__slides {
+    position: relative;
+    width: 100%;
+    height: 100%;
+  }
+
+  .hero-slideshow__slide {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.5s ease, visibility 0.5s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  }
+
+  .hero-slideshow__slide:nth-child(2) {
+    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+  }
+
+  .hero-slideshow__slide:nth-child(3) {
+    background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+  }
+
+  .hero-slideshow__slide.is-active {
+    opacity: 1;
+    visibility: visible;
+  }
+
+  .hero-slideshow__image {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+  }
+
+  .hero-slideshow__image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .hero-slideshow__content {
+    position: relative;
+    z-index: 1;
+    text-align: center;
+    max-width: 800px;
+    padding: 2rem;
+  }
+
+  .hero-slideshow__heading {
+    font-size: 3rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    line-height: 1.2;
+  }
+
+  .hero-slideshow__text {
+    font-size: 1.25rem;
+    margin-bottom: 2rem;
+    line-height: 1.6;
+  }
+
+  .hero-slideshow__button {
+    display: inline-block;
+    padding: 1rem 2rem;
+    text-decoration: none;
+    font-weight: 600;
+    border-radius: 4px;
+    transition: opacity 0.3s ease;
+  }
+
+  .hero-slideshow__button:hover {
+    opacity: 0.8;
+  }
+
+  .hero-slideshow__arrow {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(255, 255, 255, 0.9);
+    border: none;
+    width: 3rem;
+    height: 3rem;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2;
+    transition: background 0.3s ease;
+  }
+
+  .hero-slideshow__arrow:hover {
+    background: rgba(255, 255, 255, 1);
+  }
+
+  .hero-slideshow__arrow--prev {
+    left: 2rem;
+  }
+
+  .hero-slideshow__arrow--next {
+    right: 2rem;
+  }
+
+  .hero-slideshow__dots {
+    position: absolute;
+    bottom: 2rem;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 0.5rem;
+    z-index: 2;
+  }
+
+  .hero-slideshow__dot {
+    width: 0.75rem;
+    height: 0.75rem;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.5);
+    border: none;
+    cursor: pointer;
+    transition: background 0.3s ease;
+  }
+
+  .hero-slideshow__dot.is-active {
+    background: rgba(255, 255, 255, 1);
+  }
+
+  @media (max-width: 768px) {
+    .hero-slideshow__heading {
+      font-size: 2rem;
+    }
+
+    .hero-slideshow__text {
+      font-size: 1rem;
+    }
+
+    .hero-slideshow__arrow {
+      width: 2.5rem;
+      height: 2.5rem;
+    }
+
+    .hero-slideshow__arrow--prev {
+      left: 1rem;
+    }
+
+    .hero-slideshow__arrow--next {
+      right: 1rem;
+    }
+  }
+{% endstylesheet %}
+
+{% javascript %}
+  (function() {
+    const slideshow = document.querySelector('#hero-slideshow-{{ section.id }} .hero-slideshow__slides');
+    if (!slideshow) return;
+
+    const slides = slideshow.querySelectorAll('.hero-slideshow__slide');
+    const dots = document.querySelectorAll('#hero-slideshow-{{ section.id }} .hero-slideshow__dot');
+    const prevButton = document.querySelector('#hero-slideshow-{{ section.id }} .hero-slideshow__arrow--prev');
+    const nextButton = document.querySelector('#hero-slideshow-{{ section.id }} .hero-slideshow__arrow--next');
+
+    let currentSlide = 0;
+    const autoplayInterval = {{ section.settings.autoplay_speed | times: 1000 }};
+    let autoplayTimer;
+
+    function showSlide(index) {
+      slides.forEach((slide, i) => {
+        slide.classList.toggle('is-active', i === index);
+      });
+
+      dots.forEach((dot, i) => {
+        dot.classList.toggle('is-active', i === index);
+      });
+
+      currentSlide = index;
+    }
+
+    function nextSlide() {
+      const next = (currentSlide + 1) % slides.length;
+      showSlide(next);
+    }
+
+    function prevSlide() {
+      const prev = (currentSlide - 1 + slides.length) % slides.length;
+      showSlide(prev);
+    }
+
+    function startAutoplay() {
+      if (autoplayInterval > 0 && slides.length > 1) {
+        autoplayTimer = setInterval(nextSlide, autoplayInterval);
+      }
+    }
+
+    function stopAutoplay() {
+      if (autoplayTimer) {
+        clearInterval(autoplayTimer);
+      }
+    }
+
+    if (prevButton) {
+      prevButton.addEventListener('click', function() {
+        prevSlide();
+        stopAutoplay();
+        startAutoplay();
+      });
+    }
+
+    if (nextButton) {
+      nextButton.addEventListener('click', function() {
+        nextSlide();
+        stopAutoplay();
+        startAutoplay();
+      });
+    }
+
+    dots.forEach(function(dot, index) {
+      dot.addEventListener('click', function() {
+        showSlide(index);
+        stopAutoplay();
+        startAutoplay();
+      });
+    });
+
+    showSlide(0);
+    startAutoplay();
+  })();
+{% endjavascript %}
+
+{% schema %}
+{
+  "name": "Hero slideshow",
+  "settings": [
+    {
+      "type": "range",
+      "id": "height",
+      "label": "Desktop height",
+      "min": 300,
+      "max": 800,
+      "step": 50,
+      "unit": "px",
+      "default": 600
+    },
+    {
+      "type": "range",
+      "id": "mobile_height",
+      "label": "Mobile height",
+      "min": 200,
+      "max": 600,
+      "step": 50,
+      "unit": "px",
+      "default": 400
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text color",
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "color",
+      "id": "button_background",
+      "label": "Button background",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "button_text_color",
+      "label": "Button text color",
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "range",
+      "id": "autoplay_speed",
+      "label": "Autoplay speed",
+      "min": 0,
+      "max": 10,
+      "step": 1,
+      "unit": "s",
+      "default": 5,
+      "info": "Set to 0 to disable autoplay"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "slide",
+      "name": "Slide",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+        },
+        {
+          "type": "text",
+          "id": "heading",
+          "label": "Heading",
+          "default": "Welcome to our store"
+        },
+        {
+          "type": "textarea",
+          "id": "text",
+          "label": "Text",
+          "default": "Discover amazing products"
+        },
+        {
+          "type": "text",
+          "id": "button_label",
+          "label": "Button label",
+          "default": "Shop now"
+        },
+        {
+          "type": "url",
+          "id": "button_url",
+          "label": "Button URL"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Hero slideshow",
+      "blocks": [
+        {
+          "type": "slide",
+          "settings": {
+            "heading": "Discover Your Glow",
+            "text": "Premium skincare products for radiant skin",
+            "button_label": "Shop Now",
+            "button_url": "/collections/all"
+          }
+        },
+        {
+          "type": "slide",
+          "settings": {
+            "heading": "Natural Beauty",
+            "text": "Organic ingredients for healthy skin",
+            "button_label": "Learn More",
+            "button_url": "/pages/about"
+          }
+        },
+        {
+          "type": "slide",
+          "settings": {
+            "heading": "New Arrivals",
+            "text": "Check out our latest products",
+            "button_label": "View Collection",
+            "button_url": "/collections/new"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}
