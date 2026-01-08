@@ -24,14 +24,19 @@
 
 <div id="featured-collection-{{ section.id }}" class="featured-collection">
   <div class="featured-collection__container">
-    {% if section.settings.heading != blank or section.settings.description != blank %}
+    {% liquid
+      assign featured_heading = shop.metafields.custom.featured_collection_heading | default: section.settings.heading
+      assign featured_description = shop.metafields.custom.featured_collection_description | default: section.settings.description
+    %}
+
+    {% if featured_heading != blank or featured_description != blank %}
       <div class="featured-collection__header">
-        {% if section.settings.heading != blank %}
-          <h2 class="featured-collection__heading">{{ section.settings.heading }}</h2>
+        {% if featured_heading != blank %}
+          <h2 class="featured-collection__heading">{{ featured_heading }}</h2>
         {% endif %}
 
-        {% if section.settings.description != blank %}
-          <p class="featured-collection__description">{{ section.settings.description }}</p>
+        {% if featured_description != blank %}
+          <p class="featured-collection__description">{{ featured_description }}</p>
         {% endif %}
       </div>
     {% endif %}
@@ -361,13 +366,15 @@
       "type": "text",
       "id": "heading",
       "label": "Heading",
-      "default": "Featured Collection"
+      "default": "Featured Collection",
+      "info": "Can be overridden by shop metafield: custom.featured_collection_heading"
     },
     {
       "type": "textarea",
       "id": "description",
       "label": "Description",
-      "default": "Discover our curated selection of premium skincare essentials"
+      "default": "Discover our curated selection of premium skincare essentials",
+      "info": "Can be overridden by shop metafield: custom.featured_collection_description"
     },
     {
       "type": "select",

@@ -56,6 +56,20 @@ The theme checks for metafield values first. If a metafield exists and has a val
 - **Type:** URL
 - **Description:** Override hero slideshow button destination
 
+#### Featured Collection Metafields
+
+**Featured Collection Heading:**
+- **Name:** Featured Collection Heading
+- **Namespace and key:** `custom.featured_collection_heading`
+- **Type:** Single line text
+- **Description:** Override featured collection section heading
+
+**Featured Collection Description:**
+- **Name:** Featured Collection Description
+- **Namespace and key:** `custom.featured_collection_description`
+- **Type:** Multi-line text
+- **Description:** Override featured collection section description
+
 ## Setting Metafield Values
 
 After creating the definitions:
