@@ -82,6 +82,15 @@
                       <span class="before-after__slider-arrows">⟷</span>
                     </div>
                   </div>
+
+                  {% if section.blocks.size > 1 %}
+                    <button class="before-after__nav-arrow before-after__nav-arrow--prev" data-nav="prev" aria-label="Previous comparison">
+                      ‹
+                    </button>
+                    <button class="before-after__nav-arrow before-after__nav-arrow--next" data-nav="next" aria-label="Next comparison">
+                      ›
+                    </button>
+                  {% endif %}
                 </div>
               </div>
 
@@ -93,22 +102,14 @@
         </div>
 
         {% if section.blocks.size > 1 %}
-          <div class="before-after__navigation">
-            <button class="before-after__nav-button before-after__nav-button--prev" data-nav="prev" aria-label="Previous comparison">
-              ‹
-            </button>
-            <div class="before-after__dots">
-              {% for block in section.blocks %}
-                <button
-                  class="before-after__dot {% if forloop.first %}is-active{% endif %}"
-                  data-slide="{{ forloop.index0 }}"
-                  aria-label="Go to comparison {{ forloop.index }}"
-                ></button>
-              {% endfor %}
-            </div>
-            <button class="before-after__nav-button before-after__nav-button--next" data-nav="next" aria-label="Next comparison">
-              ›
-            </button>
+          <div class="before-after__dots">
+            {% for block in section.blocks %}
+              <button
+                class="before-after__dot {% if forloop.first %}is-active{% endif %}"
+                data-slide="{{ forloop.index0 }}"
+                aria-label="Go to comparison {{ forloop.index }}"
+              ></button>
+            {% endfor %}
           </div>
         {% endif %}
       </div>
@@ -309,38 +310,53 @@
     margin: 0 0 2rem 0;
   }
 
-  .before-after__navigation {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 2rem;
-    margin-top: 2rem;
-  }
-
-  .before-after__nav-button {
-    width: 40px;
-    height: 40px;
+  .before-after__nav-arrow {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 50px;
+    height: 50px;
     border-radius: 50%;
-    border: 2px solid #4A3F35;
-    background: transparent;
+    border: none;
+    background: rgba(255, 255, 255, 0.9);
     color: #4A3F35;
-    font-size: 24px;
+    font-size: 32px;
     cursor: pointer;
     transition: all 0.3s ease;
     display: flex;
     align-items: center;
     justify-content: center;
     line-height: 1;
+    z-index: 5;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.15);
+    opacity: 0;
+    pointer-events: none;
   }
 
-  .before-after__nav-button:hover {
-    background: #4A3F35;
-    color: #F5F1E8;
+  .before-after__comparison:hover .before-after__nav-arrow {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .before-after__nav-arrow--prev {
+    left: 1rem;
+  }
+
+  .before-after__nav-arrow--next {
+    right: 1rem;
+  }
+
+  .before-after__nav-arrow:hover {
+    background: rgba(255, 255, 255, 1);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
+    transform: translateY(-50%) scale(1.1);
   }
 
   .before-after__dots {
     display: flex;
     gap: 0.75rem;
+    justify-content: center;
+    margin-top: 1.5rem;
   }
 
   .before-after__dot {
@@ -405,6 +421,22 @@
     .before-after__placeholder-text {
       font-size: 2rem;
     }
+
+    .before-after__nav-arrow {
+      width: 40px;
+      height: 40px;
+      font-size: 28px;
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .before-after__nav-arrow--prev {
+      left: 0.5rem;
+    }
+
+    .before-after__nav-arrow--next {
+      right: 0.5rem;
+    }
   }
 {% endstylesheet %}
 
@@ -417,8 +449,8 @@
 
     const slides = slidesContainer.querySelectorAll('.before-after__slide');
     const dots = document.querySelectorAll('.before-after__dot');
-    const prevButton = document.querySelector('[data-nav="prev"]');
-    const nextButton = document.querySelector('[data-nav="next"]');
+    const prevButtons = document.querySelectorAll('[data-nav="prev"]');
+    const nextButtons = document.querySelectorAll('[data-nav="next"]');
     let currentSlide = 0;
 
     // Initialize interactive before/after sliders
@@ -484,19 +516,19 @@
       currentSlide = index;
     }
 
-    if (prevButton) {
+    prevButtons.forEach((prevButton) => {
       prevButton.addEventListener('click', () => {
         const newIndex = currentSlide === 0 ? slides.length - 1 : currentSlide - 1;
         showSlide(newIndex);
       });
-    }
+    });
 
-    if (nextButton) {
+    nextButtons.forEach((nextButton) => {
       nextButton.addEventListener('click', () => {
         const newIndex = currentSlide === slides.length - 1 ? 0 : currentSlide + 1;
         showSlide(newIndex);
       });
-    }
+    });
 
     dots.forEach((dot) => {
       dot.addEventListener('click', () => {
