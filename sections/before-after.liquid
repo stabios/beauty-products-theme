@@ -44,7 +44,7 @@
 
     {% if section.blocks.size > 0 %}
       <div class="before-after__slider-wrapper">
-        <div class="before-after__slides" data-slider-id="{{ section.id }}">
+        <div class="before-after__slides" data-slider-id="before-after-{{ section.id }}">
           {% for block in section.blocks %}
             {% liquid
               assign before_img = shop.metafields.custom[block.settings.before_image_metafield] | default: block.settings.before_image
@@ -59,8 +59,8 @@
                     {% if before_img != blank %}
                       {{ before_img | image_url: width: 1200 | image_tag: loading: 'lazy', alt: 'Before' }}
                     {% else %}
-                      <div class="before-after__placeholder">
-                        {{ 'image' | placeholder_svg_tag: 'placeholder-svg' }}
+                      <div class="before-after__placeholder before-after__placeholder--before">
+                        <div class="before-after__placeholder-text">BEFORE</div>
                       </div>
                     {% endif %}
                     <span class="before-after__label before-after__label--before">{{ block.settings.before_label }}</span>
@@ -70,8 +70,8 @@
                     {% if after_img != blank %}
                       {{ after_img | image_url: width: 1200 | image_tag: loading: 'lazy', alt: 'After' }}
                     {% else %}
-                      <div class="before-after__placeholder">
-                        {{ 'image' | placeholder_svg_tag: 'placeholder-svg' }}
+                      <div class="before-after__placeholder before-after__placeholder--after">
+                        <div class="before-after__placeholder-text">AFTER</div>
                       </div>
                     {% endif %}
                     <span class="before-after__label before-after__label--after">{{ block.settings.after_label }}</span>
@@ -220,13 +220,24 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    background: #E8DCC8;
+    background: linear-gradient(135deg, #E8DCC8 0%, #D4C4B0 100%);
   }
 
-  .before-after__placeholder svg {
-    width: 50%;
-    height: 50%;
-    opacity: 0.3;
+  .before-after__placeholder--before {
+    background: linear-gradient(135deg, #B8A89A 0%, #9D8D7F 100%);
+  }
+
+  .before-after__placeholder--after {
+    background: linear-gradient(135deg, #F5EBE0 0%, #E8DCC8 100%);
+  }
+
+  .before-after__placeholder-text {
+    font-family: var(--font-heading--family);
+    font-size: 3rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    color: rgba(255, 255, 255, 0.4);
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   }
 
   .before-after__slider {
@@ -390,13 +401,18 @@
     .before-after__slider-arrows {
       font-size: 20px;
     }
+
+    .before-after__placeholder-text {
+      font-size: 2rem;
+    }
   }
 {% endstylesheet %}
 
 {% javascript %}
-  (function() {
-    const sliderId = '{{ section.id }}';
-    const slidesContainer = document.querySelector(`[data-slider-id="${sliderId}"]`);
+  document.addEventListener('DOMContentLoaded', function() {
+    const slidesContainers = document.querySelectorAll('[data-slider-id^="before-after-"]');
+
+    slidesContainers.forEach(function(slidesContainer) {
     if (!slidesContainer) return;
 
     const slides = slidesContainer.querySelectorAll('.before-after__slide');
@@ -488,7 +504,8 @@
         showSlide(slideIndex);
       });
     });
-  })();
+    });
+  });
 {% endjavascript %}
 
 {% schema %}
