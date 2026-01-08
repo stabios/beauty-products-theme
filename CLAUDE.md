@@ -1,0 +1,1 @@
+/Users/symboltabios/Documents/shopify-themes/skinshop-theme/AGENTS.md
