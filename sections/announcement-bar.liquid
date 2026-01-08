@@ -8,13 +8,18 @@
   --announcement-text: {{ section.settings.text_color }};
 ">
   <div class="announcement-bar__content">
-    {% if section.settings.text != blank %}
-      {% if section.settings.link != blank %}
-        <a href="{{ section.settings.link }}" class="announcement-bar__link">
-          {{ section.settings.text }}
+    {% liquid
+      assign announcement_text = shop.metafields.custom.announcement_text | default: section.settings.text
+      assign announcement_link = shop.metafields.custom.announcement_link | default: section.settings.link
+    %}
+
+    {% if announcement_text != blank %}
+      {% if announcement_link != blank %}
+        <a href="{{ announcement_link }}" class="announcement-bar__link">
+          {{ announcement_text }}
         </a>
       {% else %}
-        {{ section.settings.text }}
+        {{ announcement_text }}
       {% endif %}
     {% endif %}
   </div>
@@ -71,7 +76,8 @@
       "type": "text",
       "id": "text",
       "label": "Announcement text",
-      "default": "Special offer! Free delivery worldwide"
+      "default": "Special offer! Free delivery worldwide",
+      "info": "Can be overridden by shop metafield: namespace.key"
     },
     {
       "type": "url",

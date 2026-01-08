@@ -30,17 +30,24 @@
         {% endif %}
 
         <div class="hero-slideshow__content">
-          {% if block.settings.heading != blank %}
-            <h2 class="hero-slideshow__heading">{{ block.settings.heading }}</h2>
+          {% liquid
+            assign slide_heading = shop.metafields.custom.hero_heading | default: block.settings.heading
+            assign slide_text = shop.metafields.custom.hero_text | default: block.settings.text
+            assign button_label = shop.metafields.custom.hero_button_label | default: block.settings.button_label
+            assign button_url = shop.metafields.custom.hero_button_url | default: block.settings.button_url
+          %}
+
+          {% if slide_heading != blank %}
+            <h2 class="hero-slideshow__heading">{{ slide_heading }}</h2>
           {% endif %}
 
-          {% if block.settings.text != blank %}
-            <p class="hero-slideshow__text">{{ block.settings.text }}</p>
+          {% if slide_text != blank %}
+            <p class="hero-slideshow__text">{{ slide_text }}</p>
           {% endif %}
 
-          {% if block.settings.button_label != blank and block.settings.button_url != blank %}
-            <a href="{{ block.settings.button_url }}" class="hero-slideshow__button">
-              {{ block.settings.button_label }}
+          {% if button_label != blank and button_url != blank %}
+            <a href="{{ button_url }}" class="hero-slideshow__button">
+              {{ button_label }}
             </a>
           {% endif %}
         </div>
@@ -392,24 +399,28 @@
           "type": "text",
           "id": "heading",
           "label": "Heading",
-          "default": "Welcome to our store"
+          "default": "Welcome to our store",
+          "info": "Can be overridden by shop metafield: custom.hero_heading"
         },
         {
           "type": "textarea",
           "id": "text",
           "label": "Text",
-          "default": "Discover amazing products"
+          "default": "Discover amazing products",
+          "info": "Can be overridden by shop metafield: custom.hero_text"
         },
         {
           "type": "text",
           "id": "button_label",
           "label": "Button label",
-          "default": "Shop now"
+          "default": "Shop now",
+          "info": "Can be overridden by shop metafield: custom.hero_button_label"
         },
         {
           "type": "url",
           "id": "button_url",
-          "label": "Button URL"
+          "label": "Button URL",
+          "info": "Can be overridden by shop metafield: custom.hero_button_url"
         }
       ]
     }
