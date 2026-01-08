@@ -54,6 +54,12 @@
 
             <div class="before-after__slide {% if forloop.first %}is-active{% endif %}" {{ block.shopify_attributes }}>
               <div class="before-after__comparison" data-comparison>
+                {% if section.blocks.size > 1 %}
+                  <button class="before-after__nav-arrow before-after__nav-arrow--prev" data-nav="prev" aria-label="Previous comparison">
+                    ‹
+                  </button>
+                {% endif %}
+
                 <div class="before-after__image-wrapper">
                   <div class="before-after__before">
                     {% if before_img != blank %}
@@ -82,16 +88,13 @@
                       <span class="before-after__slider-arrows">⟷</span>
                     </div>
                   </div>
-
-                  {% if section.blocks.size > 1 %}
-                    <button class="before-after__nav-arrow before-after__nav-arrow--prev" data-nav="prev" aria-label="Previous comparison">
-                      ‹
-                    </button>
-                    <button class="before-after__nav-arrow before-after__nav-arrow--next" data-nav="next" aria-label="Next comparison">
-                      ›
-                    </button>
-                  {% endif %}
                 </div>
+
+                {% if section.blocks.size > 1 %}
+                  <button class="before-after__nav-arrow before-after__nav-arrow--next" data-nav="next" aria-label="Next comparison">
+                    ›
+                  </button>
+                {% endif %}
               </div>
 
               {% if caption_text != blank %}
@@ -171,20 +174,24 @@
   }
 
   .before-after__comparison {
-    position: relative;
-    overflow: hidden;
-    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 2rem;
     margin-bottom: 1rem;
     user-select: none;
   }
 
   .before-after__image-wrapper {
     position: relative;
+    flex: 0 0 auto;
     width: 100%;
+    max-width: 800px;
     padding-bottom: 100%;
     overflow: hidden;
     background: #F5F1E8;
     cursor: ew-resize;
+    border-radius: 4px;
   }
 
   .before-after__before,
@@ -311,9 +318,7 @@
   }
 
   .before-after__nav-arrow {
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
+    flex: 0 0 auto;
     width: 50px;
     height: 50px;
     border-radius: 50%;
@@ -327,29 +332,13 @@
     align-items: center;
     justify-content: center;
     line-height: 1;
-    z-index: 5;
     box-shadow: 0 2px 12px rgba(0, 0, 0, 0.15);
-    opacity: 0;
-    pointer-events: none;
-  }
-
-  .before-after__comparison:hover .before-after__nav-arrow {
-    opacity: 1;
-    pointer-events: auto;
-  }
-
-  .before-after__nav-arrow--prev {
-    left: 1rem;
-  }
-
-  .before-after__nav-arrow--next {
-    right: 1rem;
   }
 
   .before-after__nav-arrow:hover {
     background: rgba(255, 255, 255, 1);
     box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
-    transform: translateY(-50%) scale(1.1);
+    transform: scale(1.1);
   }
 
   .before-after__dots {
@@ -404,6 +393,10 @@
       font-size: 1rem;
     }
 
+    .before-after__comparison {
+      gap: 0.75rem;
+    }
+
     .before-after__label {
       font-size: 0.75rem;
       padding: 0.375rem 0.75rem;
@@ -426,16 +419,6 @@
       width: 40px;
       height: 40px;
       font-size: 28px;
-      opacity: 1;
-      pointer-events: auto;
-    }
-
-    .before-after__nav-arrow--prev {
-      left: 0.5rem;
-    }
-
-    .before-after__nav-arrow--next {
-      right: 0.5rem;
     }
   }
 {% endstylesheet %}
