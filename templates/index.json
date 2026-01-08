@@ -87,11 +87,20 @@
             "after_label": "After",
             "caption": "After 8 weeks of consistent application"
           }
+        },
+        "comparison-3": {
+          "type": "comparison",
+          "settings": {
+            "before_label": "Before",
+            "after_label": "After",
+            "caption": "After 12 weeks of transformation"
+          }
         }
       },
       "block_order": [
         "comparison-1",
-        "comparison-2"
+        "comparison-2",
+        "comparison-3"
       ],
       "settings": {
         "heading": "Real Results",

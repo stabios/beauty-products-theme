@@ -84,6 +84,16 @@ The theme checks for metafield values first. If a metafield exists and has a val
 - **Type:** Multi-line text
 - **Description:** Override before/after section description
 
+**Before & After Images (Dynamic):**
+- **Note:** Each comparison slide can have its own metafield override
+- **Example Before Image:** `custom.before_image_1`, `custom.before_image_2`, etc.
+- **Type:** File (Image)
+- **Example After Image:** `custom.after_image_1`, `custom.after_image_2`, etc.
+- **Type:** File (Image)
+- **Example Caption:** `custom.before_after_caption_1`, `custom.before_after_caption_2`, etc.
+- **Type:** Single line text or Multi-line text
+- **Description:** You specify the metafield key name in each block's settings to enable dynamic override
+
 ## Setting Metafield Values
 
 After creating the definitions:

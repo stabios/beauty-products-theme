@@ -1,6 +1,6 @@
 {% comment %}
   Before & After Section
-  Displays before/after image comparisons to showcase product results.
+  Displays interactive before/after image slider to showcase product results.
 {% endcomment %}
 
 {% style %}
@@ -43,42 +43,74 @@
     {% endif %}
 
     {% if section.blocks.size > 0 %}
-      <div class="before-after__grid">
-        {% for block in section.blocks %}
-          <div class="before-after__item" {{ block.shopify_attributes }}>
-            <div class="before-after__comparison">
-              <div class="before-after__image-wrapper">
-                <div class="before-after__before">
-                  {% if block.settings.before_image != blank %}
-                    {{ block.settings.before_image | image_url: width: 800 | image_tag: loading: 'lazy', alt: 'Before' }}
-                  {% else %}
-                    <div class="before-after__placeholder">
-                      {{ 'image' | placeholder_svg_tag: 'placeholder-svg' }}
-                    </div>
-                  {% endif %}
-                  <span class="before-after__label before-after__label--before">{{ block.settings.before_label }}</span>
-                </div>
+      <div class="before-after__slider-wrapper">
+        <div class="before-after__slides" data-slider-id="{{ section.id }}">
+          {% for block in section.blocks %}
+            {% liquid
+              assign before_img = shop.metafields.custom[block.settings.before_image_metafield] | default: block.settings.before_image
+              assign after_img = shop.metafields.custom[block.settings.after_image_metafield] | default: block.settings.after_image
+              assign caption_text = shop.metafields.custom[block.settings.caption_metafield] | default: block.settings.caption
+            %}
 
-                <div class="before-after__after">
-                  {% if block.settings.after_image != blank %}
-                    {{ block.settings.after_image | image_url: width: 800 | image_tag: loading: 'lazy', alt: 'After' }}
-                  {% else %}
-                    <div class="before-after__placeholder">
-                      {{ 'image' | placeholder_svg_tag: 'placeholder-svg' }}
-                    </div>
-                  {% endif %}
-                  <span class="before-after__label before-after__label--after">{{ block.settings.after_label }}</span>
-                </div>
+            <div class="before-after__slide {% if forloop.first %}is-active{% endif %}" {{ block.shopify_attributes }}>
+              <div class="before-after__comparison" data-comparison>
+                <div class="before-after__image-wrapper">
+                  <div class="before-after__before">
+                    {% if before_img != blank %}
+                      {{ before_img | image_url: width: 1200 | image_tag: loading: 'lazy', alt: 'Before' }}
+                    {% else %}
+                      <div class="before-after__placeholder">
+                        {{ 'image' | placeholder_svg_tag: 'placeholder-svg' }}
+                      </div>
+                    {% endif %}
+                    <span class="before-after__label before-after__label--before">{{ block.settings.before_label }}</span>
+                  </div>
 
-                <div class="before-after__divider"></div>
+                  <div class="before-after__after">
+                    {% if after_img != blank %}
+                      {{ after_img | image_url: width: 1200 | image_tag: loading: 'lazy', alt: 'After' }}
+                    {% else %}
+                      <div class="before-after__placeholder">
+                        {{ 'image' | placeholder_svg_tag: 'placeholder-svg' }}
+                      </div>
+                    {% endif %}
+                    <span class="before-after__label before-after__label--after">{{ block.settings.after_label }}</span>
+                  </div>
+
+                  <div class="before-after__slider" data-slider>
+                    <div class="before-after__slider-button" data-slider-button>
+                      <span class="before-after__slider-arrows">⟷</span>
+                    </div>
+                  </div>
+                </div>
               </div>
-            </div>
 
-            {% if block.settings.caption != blank %}
-              <p class="before-after__caption">{{ block.settings.caption }}</p>
-            {% endif %}
+              {% if caption_text != blank %}
+                <p class="before-after__caption">{{ caption_text }}</p>
+              {% endif %}
+            </div>
+          {% endfor %}
+        </div>
+
+        {% if section.blocks.size > 1 %}
+          <div class="before-after__navigation">
+            <button class="before-after__nav-button before-after__nav-button--prev" data-nav="prev" aria-label="Previous comparison">
+              ‹
+            </button>
+            <div class="before-after__dots">
+              {% for block in section.blocks %}
+                <button
+                  class="before-after__dot {% if forloop.first %}is-active{% endif %}"
+                  data-slide="{{ forloop.index0 }}"
+                  aria-label="Go to comparison {{ forloop.index }}"
+                ></button>
+              {% endfor %}
+            </div>
+            <button class="before-after__nav-button before-after__nav-button--next" data-nav="next" aria-label="Next comparison">
+              ›
+            </button>
           </div>
-        {% endfor %}
+        {% endif %}
       </div>
     {% else %}
       <div class="before-after__empty">
@@ -117,15 +149,24 @@
     margin: 0 auto;
   }
 
-  .before-after__grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 3rem;
+  .before-after__slider-wrapper {
+    max-width: 800px;
+    margin: 0 auto;
   }
 
-  .before-after__item {
-    display: flex;
-    flex-direction: column;
+  .before-after__slides {
+    position: relative;
+  }
+
+  .before-after__slide {
+    display: none;
+    opacity: 0;
+    transition: opacity 0.5s ease;
+  }
+
+  .before-after__slide.is-active {
+    display: block;
+    opacity: 1;
   }
 
   .before-after__comparison {
@@ -133,6 +174,7 @@
     overflow: hidden;
     border-radius: 4px;
     margin-bottom: 1rem;
+    user-select: none;
   }
 
   .before-after__image-wrapper {
@@ -141,6 +183,7 @@
     padding-bottom: 100%;
     overflow: hidden;
     background: #F5F1E8;
+    cursor: ew-resize;
   }
 
   .before-after__before,
@@ -159,6 +202,7 @@
   .before-after__after {
     z-index: 2;
     clip-path: polygon(50% 0, 100% 0, 100% 100%, 50% 100%);
+    transition: clip-path 0.05s ease-out;
   }
 
   .before-after__before img,
@@ -185,7 +229,7 @@
     opacity: 0.3;
   }
 
-  .before-after__divider {
+  .before-after__slider {
     position: absolute;
     top: 0;
     left: 50%;
@@ -195,30 +239,30 @@
     background: #fff;
     z-index: 3;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    transition: left 0.05s ease-out;
   }
 
-  .before-after__divider::before {
-    content: '';
+  .before-after__slider-button {
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    width: 40px;
-    height: 40px;
+    width: 50px;
+    height: 50px;
     background: #fff;
     border-radius: 50%;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: ew-resize;
+    touch-action: none;
   }
 
-  .before-after__divider::after {
-    content: '⟷';
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    font-size: 20px;
+  .before-after__slider-arrows {
+    font-size: 24px;
     color: #4A3F35;
-    z-index: 1;
+    font-weight: bold;
   }
 
   .before-after__label {
@@ -251,7 +295,57 @@
     line-height: 1.5;
     color: var(--color-foreground);
     opacity: 0.8;
-    margin: 0;
+    margin: 0 0 2rem 0;
+  }
+
+  .before-after__navigation {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 2rem;
+    margin-top: 2rem;
+  }
+
+  .before-after__nav-button {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 2px solid #4A3F35;
+    background: transparent;
+    color: #4A3F35;
+    font-size: 24px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
+  }
+
+  .before-after__nav-button:hover {
+    background: #4A3F35;
+    color: #F5F1E8;
+  }
+
+  .before-after__dots {
+    display: flex;
+    gap: 0.75rem;
+  }
+
+  .before-after__dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    border: 2px solid #4A3F35;
+    background: transparent;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    padding: 0;
+  }
+
+  .before-after__dot.is-active,
+  .before-after__dot:hover {
+    background: #4A3F35;
   }
 
   .before-after__empty {
@@ -271,11 +365,6 @@
 
   /* Mobile adjustments */
   @media (max-width: 768px) {
-    .before-after__grid {
-      grid-template-columns: 1fr;
-      gap: 2rem;
-    }
-
     .before-after__header {
       margin-bottom: 2rem;
     }
@@ -292,8 +381,115 @@
       font-size: 0.75rem;
       padding: 0.375rem 0.75rem;
     }
+
+    .before-after__slider-button {
+      width: 40px;
+      height: 40px;
+    }
+
+    .before-after__slider-arrows {
+      font-size: 20px;
+    }
   }
 {% endstylesheet %}
+
+{% javascript %}
+  (function() {
+    const sliderId = '{{ section.id }}';
+    const slidesContainer = document.querySelector(`[data-slider-id="${sliderId}"]`);
+    if (!slidesContainer) return;
+
+    const slides = slidesContainer.querySelectorAll('.before-after__slide');
+    const dots = document.querySelectorAll('.before-after__dot');
+    const prevButton = document.querySelector('[data-nav="prev"]');
+    const nextButton = document.querySelector('[data-nav="next"]');
+    let currentSlide = 0;
+
+    // Initialize interactive before/after sliders
+    slides.forEach((slide) => {
+      const comparison = slide.querySelector('[data-comparison]');
+      if (!comparison) return;
+
+      const wrapper = comparison.querySelector('.before-after__image-wrapper');
+      const afterLayer = comparison.querySelector('.before-after__after');
+      const slider = comparison.querySelector('[data-slider]');
+      const sliderButton = comparison.querySelector('[data-slider-button]');
+
+      let isDragging = false;
+
+      function updateSlider(clientX) {
+        const rect = wrapper.getBoundingClientRect();
+        const x = clientX - rect.left;
+        const percentage = Math.max(0, Math.min(100, (x / rect.width) * 100));
+
+        afterLayer.style.clipPath = `polygon(${percentage}% 0, 100% 0, 100% 100%, ${percentage}% 100%)`;
+        slider.style.left = `${percentage}%`;
+      }
+
+      // Mouse events
+      wrapper.addEventListener('mousedown', (e) => {
+        isDragging = true;
+        updateSlider(e.clientX);
+      });
+
+      document.addEventListener('mousemove', (e) => {
+        if (!isDragging) return;
+        updateSlider(e.clientX);
+      });
+
+      document.addEventListener('mouseup', () => {
+        isDragging = false;
+      });
+
+      // Touch events
+      wrapper.addEventListener('touchstart', (e) => {
+        isDragging = true;
+        updateSlider(e.touches[0].clientX);
+      });
+
+      document.addEventListener('touchmove', (e) => {
+        if (!isDragging) return;
+        updateSlider(e.touches[0].clientX);
+      });
+
+      document.addEventListener('touchend', () => {
+        isDragging = false;
+      });
+    });
+
+    // Slideshow navigation
+    function showSlide(index) {
+      slides.forEach((slide, i) => {
+        slide.classList.toggle('is-active', i === index);
+      });
+      dots.forEach((dot, i) => {
+        dot.classList.toggle('is-active', i === index);
+      });
+      currentSlide = index;
+    }
+
+    if (prevButton) {
+      prevButton.addEventListener('click', () => {
+        const newIndex = currentSlide === 0 ? slides.length - 1 : currentSlide - 1;
+        showSlide(newIndex);
+      });
+    }
+
+    if (nextButton) {
+      nextButton.addEventListener('click', () => {
+        const newIndex = currentSlide === slides.length - 1 ? 0 : currentSlide + 1;
+        showSlide(newIndex);
+      });
+    }
+
+    dots.forEach((dot) => {
+      dot.addEventListener('click', () => {
+        const slideIndex = parseInt(dot.dataset.slide);
+        showSlide(slideIndex);
+      });
+    });
+  })();
+{% endjavascript %}
 
 {% schema %}
 {
@@ -391,9 +587,20 @@
       "name": "Before/After Comparison",
       "settings": [
         {
+          "type": "header",
+          "content": "Before Image"
+        },
+        {
           "type": "image_picker",
           "id": "before_image",
-          "label": "Before image"
+          "label": "Before image",
+          "info": "Can be overridden by shop metafield specified below"
+        },
+        {
+          "type": "text",
+          "id": "before_image_metafield",
+          "label": "Before image metafield key (optional)",
+          "info": "Example: before_image_1 (will use shop.metafields.custom.before_image_1)"
         },
         {
           "type": "text",
@@ -402,9 +609,20 @@
           "default": "Before"
         },
         {
+          "type": "header",
+          "content": "After Image"
+        },
+        {
           "type": "image_picker",
           "id": "after_image",
-          "label": "After image"
+          "label": "After image",
+          "info": "Can be overridden by shop metafield specified below"
+        },
+        {
+          "type": "text",
+          "id": "after_image_metafield",
+          "label": "After image metafield key (optional)",
+          "info": "Example: after_image_1 (will use shop.metafields.custom.after_image_1)"
         },
         {
           "type": "text",
@@ -413,10 +631,21 @@
           "default": "After"
         },
         {
+          "type": "header",
+          "content": "Caption"
+        },
+        {
           "type": "textarea",
           "id": "caption",
           "label": "Caption",
-          "default": "After 4 weeks of daily use"
+          "default": "After 4 weeks of daily use",
+          "info": "Can be overridden by shop metafield specified below"
+        },
+        {
+          "type": "text",
+          "id": "caption_metafield",
+          "label": "Caption metafield key (optional)",
+          "info": "Example: before_after_caption_1 (will use shop.metafields.custom.before_after_caption_1)"
         }
       ]
     }
@@ -438,7 +667,15 @@
           "settings": {
             "before_label": "Before",
             "after_label": "After",
-            "caption": "After 8 weeks of daily use"
+            "caption": "After 8 weeks of consistent application"
+          }
+        },
+        {
+          "type": "comparison",
+          "settings": {
+            "before_label": "Before",
+            "after_label": "After",
+            "caption": "After 12 weeks of transformation"
           }
         }
       ]
