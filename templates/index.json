@@ -18,7 +18,7 @@
             "heading": "Discover Your Glow",
             "text": "Premium skincare products for radiant skin",
             "button_label": "Shop Now",
-            "button_url": "/collections/all"
+            "button_url": "/products"
           }
         },
         "slide-2": {
@@ -27,7 +27,7 @@
             "heading": "Natural Beauty",
             "text": "Organic ingredients for healthy skin",
             "button_label": "Learn More",
-            "button_url": "/pages/about"
+            "button_url": "/pages/contact"
           }
         },
         "slide-3": {
@@ -35,8 +35,8 @@
           "settings": {
             "heading": "New Arrivals",
             "text": "Check out our latest products",
-            "button_label": "View Collection",
-            "button_url": "/collections/new"
+            "button_label": "View Collections",
+            "button_url": "/collections"
           }
         }
       },

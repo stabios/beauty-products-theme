@@ -69,6 +69,83 @@
   {% endif %}
 </div>
 
+<script>
+  (function() {
+    const slideshow = document.querySelector('#hero-slideshow-{{ section.id }} .hero-slideshow__slides');
+    if (!slideshow) return;
+
+    const slides = slideshow.querySelectorAll('.hero-slideshow__slide');
+    const dots = document.querySelectorAll('#hero-slideshow-{{ section.id }} .hero-slideshow__dot');
+    const prevButton = document.querySelector('#hero-slideshow-{{ section.id }} .hero-slideshow__arrow--prev');
+    const nextButton = document.querySelector('#hero-slideshow-{{ section.id }} .hero-slideshow__arrow--next');
+
+    let currentSlide = 0;
+    const autoplayInterval = {{ section.settings.autoplay_speed | times: 1000 }};
+    let autoplayTimer;
+
+    function showSlide(index) {
+      slides.forEach(function(slide, i) {
+        slide.classList.toggle('is-active', i === index);
+      });
+
+      dots.forEach(function(dot, i) {
+        dot.classList.toggle('is-active', i === index);
+      });
+
+      currentSlide = index;
+    }
+
+    function nextSlide() {
+      const next = (currentSlide + 1) % slides.length;
+      showSlide(next);
+    }
+
+    function prevSlide() {
+      const prev = (currentSlide - 1 + slides.length) % slides.length;
+      showSlide(prev);
+    }
+
+    function startAutoplay() {
+      if (autoplayInterval > 0 && slides.length > 1) {
+        autoplayTimer = setInterval(nextSlide, autoplayInterval);
+      }
+    }
+
+    function stopAutoplay() {
+      if (autoplayTimer) {
+        clearInterval(autoplayTimer);
+      }
+    }
+
+    if (prevButton) {
+      prevButton.addEventListener('click', function() {
+        prevSlide();
+        stopAutoplay();
+        startAutoplay();
+      });
+    }
+
+    if (nextButton) {
+      nextButton.addEventListener('click', function() {
+        nextSlide();
+        stopAutoplay();
+        startAutoplay();
+      });
+    }
+
+    dots.forEach(function(dot, index) {
+      dot.addEventListener('click', function() {
+        showSlide(index);
+        stopAutoplay();
+        startAutoplay();
+      });
+    });
+
+    showSlide(0);
+    startAutoplay();
+  })();
+</script>
+
 {% stylesheet %}
   .hero-slideshow {
     position: relative;
@@ -142,7 +219,7 @@
 
   .hero-slideshow__text {
     font-size: 1.25rem;
-    margin-bottom: 2rem;
+    margin-bottom: 3rem;
     line-height: 1.6;
   }
 
@@ -235,83 +312,6 @@
     }
   }
 {% endstylesheet %}
-
-{% javascript %}
-  (function() {
-    const slideshow = document.querySelector('#hero-slideshow-{{ section.id }} .hero-slideshow__slides');
-    if (!slideshow) return;
-
-    const slides = slideshow.querySelectorAll('.hero-slideshow__slide');
-    const dots = document.querySelectorAll('#hero-slideshow-{{ section.id }} .hero-slideshow__dot');
-    const prevButton = document.querySelector('#hero-slideshow-{{ section.id }} .hero-slideshow__arrow--prev');
-    const nextButton = document.querySelector('#hero-slideshow-{{ section.id }} .hero-slideshow__arrow--next');
-
-    let currentSlide = 0;
-    const autoplayInterval = {{ section.settings.autoplay_speed | times: 1000 }};
-    let autoplayTimer;
-
-    function showSlide(index) {
-      slides.forEach((slide, i) => {
-        slide.classList.toggle('is-active', i === index);
-      });
-
-      dots.forEach((dot, i) => {
-        dot.classList.toggle('is-active', i === index);
-      });
-
-      currentSlide = index;
-    }
-
-    function nextSlide() {
-      const next = (currentSlide + 1) % slides.length;
-      showSlide(next);
-    }
-
-    function prevSlide() {
-      const prev = (currentSlide - 1 + slides.length) % slides.length;
-      showSlide(prev);
-    }
-
-    function startAutoplay() {
-      if (autoplayInterval > 0 && slides.length > 1) {
-        autoplayTimer = setInterval(nextSlide, autoplayInterval);
-      }
-    }
-
-    function stopAutoplay() {
-      if (autoplayTimer) {
-        clearInterval(autoplayTimer);
-      }
-    }
-
-    if (prevButton) {
-      prevButton.addEventListener('click', function() {
-        prevSlide();
-        stopAutoplay();
-        startAutoplay();
-      });
-    }
-
-    if (nextButton) {
-      nextButton.addEventListener('click', function() {
-        nextSlide();
-        stopAutoplay();
-        startAutoplay();
-      });
-    }
-
-    dots.forEach(function(dot, index) {
-      dot.addEventListener('click', function() {
-        showSlide(index);
-        stopAutoplay();
-        startAutoplay();
-      });
-    });
-
-    showSlide(0);
-    startAutoplay();
-  })();
-{% endjavascript %}
 
 {% schema %}
 {
