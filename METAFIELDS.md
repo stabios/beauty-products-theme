@@ -70,6 +70,20 @@ The theme checks for metafield values first. If a metafield exists and has a val
 - **Type:** Multi-line text
 - **Description:** Override featured collection section description
 
+#### Before & After Metafields
+
+**Before & After Heading:**
+- **Name:** Before & After Heading
+- **Namespace and key:** `custom.before_after_heading`
+- **Type:** Single line text
+- **Description:** Override before/after section heading
+
+**Before & After Description:**
+- **Name:** Before & After Description
+- **Namespace and key:** `custom.before_after_description`
+- **Type:** Multi-line text
+- **Description:** Override before/after section description
+
 ## Setting Metafield Values
 
 After creating the definitions:

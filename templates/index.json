@@ -69,6 +69,42 @@
         "padding_bottom": 80
       }
     },
+    "before-after": {
+      "type": "before-after",
+      "blocks": {
+        "comparison-1": {
+          "type": "comparison",
+          "settings": {
+            "before_label": "Before",
+            "after_label": "After",
+            "caption": "After 4 weeks of daily use"
+          }
+        },
+        "comparison-2": {
+          "type": "comparison",
+          "settings": {
+            "before_label": "Before",
+            "after_label": "After",
+            "caption": "After 8 weeks of consistent application"
+          }
+        }
+      },
+      "block_order": [
+        "comparison-1",
+        "comparison-2"
+      ],
+      "settings": {
+        "heading": "Real Results",
+        "description": "See the transformative power of our products through real customer results",
+        "heading_alignment": "center",
+        "heading_color": "#4A3F35",
+        "text_color": "#4A3F35",
+        "heading_spacing": 48,
+        "background_color": "#ffffff",
+        "padding_top": 80,
+        "padding_bottom": 80
+      }
+    },
     "main": {
       "type": "hello-world",
       "settings": {}
@@ -77,6 +113,7 @@
   "order": [
     "hero-slideshow",
     "featured-collection",
+    "before-after",
     "main"
   ]
 }
