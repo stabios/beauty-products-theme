@@ -51,8 +51,7 @@
   },
   "sections": {
     "featured_collection": {
-      "no_collection": "Select a collection in the theme editor to display products",
-      "no_products": "This collection doesn't have any products yet. Add products in your Shopify admin."
+      "no_products": "No products available. Add products in your Shopify admin to display them here."
     }
   },
   "general": {
