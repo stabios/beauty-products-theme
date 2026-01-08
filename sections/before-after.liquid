@@ -428,97 +428,105 @@
     const slidesContainers = document.querySelectorAll('[data-slider-id^="before-after-"]');
 
     slidesContainers.forEach(function(slidesContainer) {
-    if (!slidesContainer) return;
+      if (!slidesContainer) return;
 
-    const slides = slidesContainer.querySelectorAll('.before-after__slide');
-    const dots = document.querySelectorAll('.before-after__dot');
-    const prevButtons = document.querySelectorAll('[data-nav="prev"]');
-    const nextButtons = document.querySelectorAll('[data-nav="next"]');
-    let currentSlide = 0;
+      const parentSection = slidesContainer.closest('.before-after');
+      const slides = slidesContainer.querySelectorAll('.before-after__slide');
+      const dots = parentSection.querySelectorAll('.before-after__dot');
+      const prevButtons = parentSection.querySelectorAll('[data-nav="prev"]');
+      const nextButtons = parentSection.querySelectorAll('[data-nav="next"]');
+      let currentSlide = 0;
+      let activeWrapper = null;
 
-    // Initialize interactive before/after sliders
-    slides.forEach((slide) => {
-      const comparison = slide.querySelector('[data-comparison]');
-      if (!comparison) return;
+      // Shared event handlers for document (only one set per section)
+      function handleMouseMove(e) {
+        if (!activeWrapper) return;
+        updateSliderPosition(activeWrapper, e.clientX);
+      }
 
-      const wrapper = comparison.querySelector('.before-after__image-wrapper');
-      const afterLayer = comparison.querySelector('.before-after__after');
-      const slider = comparison.querySelector('[data-slider]');
-      const sliderButton = comparison.querySelector('[data-slider-button]');
+      function handleMouseUp() {
+        activeWrapper = null;
+      }
 
-      let isDragging = false;
+      function handleTouchMove(e) {
+        if (!activeWrapper) return;
+        updateSliderPosition(activeWrapper, e.touches[0].clientX);
+      }
 
-      function updateSlider(clientX) {
-        const rect = wrapper.getBoundingClientRect();
+      function handleTouchEnd() {
+        activeWrapper = null;
+      }
+
+      function updateSliderPosition(wrapperData, clientX) {
+        const rect = wrapperData.wrapper.getBoundingClientRect();
         const x = clientX - rect.left;
         const percentage = Math.max(0, Math.min(100, (x / rect.width) * 100));
 
-        afterLayer.style.clipPath = `polygon(${percentage}% 0, 100% 0, 100% 100%, ${percentage}% 100%)`;
-        slider.style.left = `${percentage}%`;
+        wrapperData.afterLayer.style.clipPath = `polygon(${percentage}% 0, 100% 0, 100% 100%, ${percentage}% 100%)`;
+        wrapperData.slider.style.left = `${percentage}%`;
       }
 
-      // Mouse events
-      wrapper.addEventListener('mousedown', (e) => {
-        isDragging = true;
-        updateSlider(e.clientX);
+      // Initialize interactive before/after sliders
+      slides.forEach((slide) => {
+        const comparison = slide.querySelector('[data-comparison]');
+        if (!comparison) return;
+
+        const wrapper = comparison.querySelector('.before-after__image-wrapper');
+        const afterLayer = comparison.querySelector('.before-after__after');
+        const slider = comparison.querySelector('[data-slider]');
+
+        const wrapperData = { wrapper, afterLayer, slider };
+
+        // Mouse events
+        wrapper.addEventListener('mousedown', (e) => {
+          activeWrapper = wrapperData;
+          updateSliderPosition(wrapperData, e.clientX);
+        });
+
+        // Touch events
+        wrapper.addEventListener('touchstart', (e) => {
+          activeWrapper = wrapperData;
+          updateSliderPosition(wrapperData, e.touches[0].clientX);
+        });
       });
 
-      document.addEventListener('mousemove', (e) => {
-        if (!isDragging) return;
-        updateSlider(e.clientX);
+      // Add document-level listeners only once per section
+      document.addEventListener('mousemove', handleMouseMove);
+      document.addEventListener('mouseup', handleMouseUp);
+      document.addEventListener('touchmove', handleTouchMove);
+      document.addEventListener('touchend', handleTouchEnd);
+
+      // Slideshow navigation
+      function showSlide(index) {
+        slides.forEach((slide, i) => {
+          slide.classList.toggle('is-active', i === index);
+        });
+        dots.forEach((dot, i) => {
+          dot.classList.toggle('is-active', i === index);
+        });
+        currentSlide = index;
+      }
+
+      prevButtons.forEach((prevButton) => {
+        prevButton.addEventListener('click', () => {
+          const newIndex = currentSlide === 0 ? slides.length - 1 : currentSlide - 1;
+          showSlide(newIndex);
+        });
       });
 
-      document.addEventListener('mouseup', () => {
-        isDragging = false;
+      nextButtons.forEach((nextButton) => {
+        nextButton.addEventListener('click', () => {
+          const newIndex = currentSlide === slides.length - 1 ? 0 : currentSlide + 1;
+          showSlide(newIndex);
+        });
       });
 
-      // Touch events
-      wrapper.addEventListener('touchstart', (e) => {
-        isDragging = true;
-        updateSlider(e.touches[0].clientX);
+      dots.forEach((dot) => {
+        dot.addEventListener('click', () => {
+          const slideIndex = parseInt(dot.dataset.slide);
+          showSlide(slideIndex);
+        });
       });
-
-      document.addEventListener('touchmove', (e) => {
-        if (!isDragging) return;
-        updateSlider(e.touches[0].clientX);
-      });
-
-      document.addEventListener('touchend', () => {
-        isDragging = false;
-      });
-    });
-
-    // Slideshow navigation
-    function showSlide(index) {
-      slides.forEach((slide, i) => {
-        slide.classList.toggle('is-active', i === index);
-      });
-      dots.forEach((dot, i) => {
-        dot.classList.toggle('is-active', i === index);
-      });
-      currentSlide = index;
-    }
-
-    prevButtons.forEach((prevButton) => {
-      prevButton.addEventListener('click', () => {
-        const newIndex = currentSlide === 0 ? slides.length - 1 : currentSlide - 1;
-        showSlide(newIndex);
-      });
-    });
-
-    nextButtons.forEach((nextButton) => {
-      nextButton.addEventListener('click', () => {
-        const newIndex = currentSlide === slides.length - 1 ? 0 : currentSlide + 1;
-        showSlide(newIndex);
-      });
-    });
-
-    dots.forEach((dot) => {
-      dot.addEventListener('click', () => {
-        const slideIndex = parseInt(dot.dataset.slide);
-        showSlide(slideIndex);
-      });
-    });
     });
   });
 {% endjavascript %}
