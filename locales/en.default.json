@@ -49,6 +49,11 @@
     "no_results_html": "No results found for {{ terms }}",
     "results_for_html": "{{ count }} results found for {{ terms }}"
   },
+  "sections": {
+    "featured_collection": {
+      "no_collection": "Please select a collection to display products"
+    }
+  },
   "general": {
     "menu_empty": "No menu items configured. Please add menu items in your Shopify admin under Online Store → Navigation.",
     "typography": "Typography",
