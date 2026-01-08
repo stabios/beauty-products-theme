@@ -15,8 +15,8 @@
       "type": "announcement-bar",
       "settings": {
         "text": "Special offer! Free delivery worldwide",
-        "background_color": "#000000",
-        "text_color": "#FFFFFF"
+        "background_color": "#C4A574",
+        "text_color": "#4A3F35"
       }
     },
     "header": {
