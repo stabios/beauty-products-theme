@@ -218,22 +218,33 @@
   }
 
   .hero-slideshow__text {
-    font-size: 1.25rem;
+    font-family: var(--font-body--family);
+    font-size: 1.125rem;
+    font-weight: 400;
     margin-bottom: 3rem;
     line-height: 1.6;
+    letter-spacing: 0.01em;
+    opacity: 0.95;
   }
 
   .hero-slideshow__button {
     display: inline-block;
-    padding: 1rem 2rem;
+    padding: 1rem 2.5rem;
     text-decoration: none;
-    font-weight: 600;
-    border-radius: 4px;
-    transition: opacity 0.3s ease;
+    font-family: var(--font-body--family);
+    font-weight: 500;
+    font-size: 0.875rem;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    border-radius: 2px;
+    transition: all 0.3s ease;
+    border: 1px solid transparent;
   }
 
   .hero-slideshow__button:hover {
-    opacity: 0.8;
+    opacity: 1;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
   }
 
   .hero-slideshow__arrow {

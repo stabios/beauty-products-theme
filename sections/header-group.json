@@ -14,7 +14,7 @@
     "announcement-bar": {
       "type": "announcement-bar",
       "settings": {
-        "text": "Special offer! Free delivery worldwide",
+        "text": "Free shipping on orders over $50 • Shop now and save 15% on your first order",
         "background_color": "#C4A574",
         "text_color": "#4A3F35"
       }

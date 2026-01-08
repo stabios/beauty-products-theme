@@ -16,7 +16,7 @@
           "type": "slide",
           "settings": {
             "heading": "Discover Your Glow",
-            "text": "Premium skincare products for radiant skin",
+            "text": "Luxurious formulas crafted with nature's finest ingredients",
             "button_label": "Shop Now",
             "button_url": "/products"
           }
@@ -25,7 +25,7 @@
           "type": "slide",
           "settings": {
             "heading": "Natural Beauty",
-            "text": "Organic ingredients for healthy skin",
+            "text": "Pure botanical extracts for visibly healthier skin",
             "button_label": "Learn More",
             "button_url": "/pages/contact"
           }
@@ -34,7 +34,7 @@
           "type": "slide",
           "settings": {
             "heading": "New Arrivals",
-            "text": "Check out our latest products",
+            "text": "Discover our latest curated collection of skincare essentials",
             "button_label": "View Collections",
             "button_url": "/collections"
           }
