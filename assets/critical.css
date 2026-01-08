@@ -73,9 +73,76 @@ p:empty {
 
 /** Theme styles below */
 body {
-  font-family: var(--font-primary--family);
+  font-family: var(--font-body--family);
+  font-size: var(--font-base-size);
+  line-height: 1.7;
+  letter-spacing: var(--letter-spacing-body);
   background-color: var(--color-background);
   color: var(--color-foreground);
+  font-weight: var(--font-body--weight);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--font-heading--family);
+  font-weight: var(--font-heading--weight);
+  letter-spacing: var(--letter-spacing-heading);
+  line-height: 1.2;
+  text-transform: uppercase;
+}
+
+h1 {
+  font-size: clamp(2.5rem, 5vw, 4rem);
+  margin-bottom: 1.5rem;
+}
+
+h2 {
+  font-size: clamp(2rem, 4vw, 3rem);
+  margin-bottom: 1.25rem;
+}
+
+h3 {
+  font-size: clamp(1.5rem, 3vw, 2rem);
+  margin-bottom: 1rem;
+}
+
+h4 {
+  font-size: clamp(1.25rem, 2.5vw, 1.5rem);
+  margin-bottom: 0.875rem;
+}
+
+h5 {
+  font-size: clamp(1.125rem, 2vw, 1.25rem);
+  margin-bottom: 0.75rem;
+}
+
+h6 {
+  font-size: clamp(1rem, 1.5vw, 1.125rem);
+  margin-bottom: 0.625rem;
+}
+
+p {
+  margin-bottom: 1rem;
+  font-size: 1rem;
+  line-height: 1.7;
+}
+
+a {
+  color: inherit;
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 2px;
+  transition: opacity 0.2s ease;
+}
+
+a:hover {
+  opacity: 0.7;
 }
 
 /** Section layout utilities */

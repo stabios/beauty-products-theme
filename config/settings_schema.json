@@ -16,9 +16,58 @@
       },
       {
         "type": "font_picker",
-        "id": "type_primary_font",
-        "default": "work_sans_n4",
-        "label": "t:general.primary"
+        "id": "type_heading_font",
+        "default": "cormorant_n4",
+        "label": "t:labels.heading_font",
+        "info": "t:info.heading_font"
+      },
+      {
+        "type": "font_picker",
+        "id": "type_body_font",
+        "default": "inter_n4",
+        "label": "t:labels.body_font",
+        "info": "t:info.body_font"
+      },
+      {
+        "type": "header",
+        "content": "t:labels.font_sizes"
+      },
+      {
+        "type": "range",
+        "id": "base_font_size",
+        "min": 14,
+        "max": 20,
+        "step": 1,
+        "unit": "px",
+        "label": "t:labels.base_font_size",
+        "default": 16,
+        "info": "t:info.base_font_size"
+      },
+      {
+        "type": "header",
+        "content": "t:labels.letter_spacing"
+      },
+      {
+        "type": "range",
+        "id": "heading_letter_spacing",
+        "min": -20,
+        "max": 40,
+        "step": 1,
+        "unit": "px",
+        "label": "t:labels.heading_letter_spacing",
+        "default": 2,
+        "info": "t:info.letter_spacing_heading"
+      },
+      {
+        "type": "range",
+        "id": "body_letter_spacing",
+        "min": -10,
+        "max": 20,
+        "step": 1,
+        "unit": "px",
+        "label": "t:labels.body_letter_spacing",
+        "default": 0,
+        "info": "t:info.letter_spacing_body"
       }
     ]
   },

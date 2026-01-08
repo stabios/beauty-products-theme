@@ -8,5 +8,16 @@
  * ------------------------------------------------------------
  */
 {
-  "current": {}
+  "current": {
+    "type_heading_font": "cormorant_n4",
+    "type_body_font": "inter_n4",
+    "base_font_size": 16,
+    "heading_letter_spacing": 2,
+    "body_letter_spacing": 0,
+    "max_page_width": "90rem",
+    "min_page_margin": 20,
+    "background_color": "#FFFFFF",
+    "foreground_color": "#333333",
+    "input_corner_radius": 4
+  }
 }

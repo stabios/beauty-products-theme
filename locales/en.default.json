@@ -50,6 +50,52 @@
     "results_for_html": "{{ count }} results found for {{ terms }}"
   },
   "general": {
-    "menu_empty": "No menu items configured. Please add menu items in your Shopify admin under Online Store → Navigation."
+    "menu_empty": "No menu items configured. Please add menu items in your Shopify admin under Online Store → Navigation.",
+    "typography": "Typography",
+    "fonts": "Fonts",
+    "primary": "Primary font",
+    "header": "Header"
+  },
+  "labels": {
+    "heading_font": "Heading font",
+    "body_font": "Body font",
+    "font_sizes": "Font sizes",
+    "base_font_size": "Base font size",
+    "letter_spacing": "Letter spacing",
+    "heading_letter_spacing": "Heading letter spacing",
+    "body_letter_spacing": "Body letter spacing",
+    "background": "Background color",
+    "foreground": "Text color",
+    "input_corner_radius": "Input corner radius",
+    "page_width": "Page width",
+    "page_margin": "Page margin",
+    "menu": "Menu"
+  },
+  "info": {
+    "heading_font": "Used for all headings (h1-h6). Elegant serif fonts work well for luxury brands.",
+    "body_font": "Used for body text and paragraphs. Clean sans-serif fonts ensure readability.",
+    "base_font_size": "Sets the base font size for body text throughout the theme.",
+    "letter_spacing_heading": "Adjusts spacing between letters in headings. Positive values create an airy, luxury feel.",
+    "letter_spacing_body": "Adjusts spacing between letters in body text. Keep minimal for readability."
+  },
+  "options": {
+    "page_width": {
+      "narrow": "Narrow (1440px)",
+      "wide": "Wide (1760px)"
+    },
+    "text_style": {
+      "title": "Title",
+      "subtitle": "Subtitle",
+      "normal": "Normal"
+    },
+    "direction": {
+      "horizontal": "Horizontal",
+      "vertical": "Vertical"
+    },
+    "alignment": {
+      "left": "Left",
+      "center": "Center",
+      "right": "Right"
+    }
   }
 }
