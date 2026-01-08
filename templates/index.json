@@ -57,8 +57,8 @@
     "featured-collection": {
       "type": "featured-collection",
       "settings": {
-        "heading": "Best Sellers",
-        "description": "Discover our most-loved skincare essentials, trusted by thousands",
+        "heading": "Featured Products",
+        "description": "Discover our handpicked selection of premium skincare essentials",
         "products_to_show": 4,
         "heading_alignment": "center",
         "heading_color": "#4A3F35",
