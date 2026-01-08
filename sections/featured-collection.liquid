@@ -37,46 +37,98 @@
     {% endif %}
 
     {% if section.settings.collection != blank %}
-      <div class="featured-collection__grid">
-        {% for product in section.settings.collection.products limit: section.settings.products_to_show %}
-          <div class="featured-collection__item">
-            <a href="{{ product.url }}" class="product-card">
-              <div class="product-card__image">
-                {% if product.featured_image %}
-                  {{ product.featured_image | image_url: width: 600 | image_tag: loading: 'lazy', alt: product.title }}
-                {% else %}
+      {% assign products_count = section.settings.collection.products.size %}
+
+      {% if products_count > 0 %}
+        <div class="featured-collection__grid">
+          {% for product in section.settings.collection.products limit: section.settings.products_to_show %}
+            <div class="featured-collection__item">
+              <a href="{{ product.url }}" class="product-card">
+                <div class="product-card__image">
+                  {% if product.featured_image %}
+                    {{ product.featured_image | image_url: width: 600 | image_tag: loading: 'lazy', alt: product.title }}
+                  {% else %}
+                    <div class="product-card__placeholder">
+                      {{ 'product-1' | placeholder_svg_tag: 'placeholder-svg' }}
+                    </div>
+                  {% endif %}
+                </div>
+
+                <div class="product-card__info">
+                  <h3 class="product-card__title">{{ product.title }}</h3>
+
+                  <div class="product-card__price">
+                    {% if product.compare_at_price > product.price %}
+                      <span class="product-card__price--sale">{{ product.price | money }}</span>
+                      <span class="product-card__price--compare">{{ product.compare_at_price | money }}</span>
+                    {% else %}
+                      <span class="product-card__price--regular">{{ product.price | money }}</span>
+                    {% endif %}
+                  </div>
+                </div>
+              </a>
+            </div>
+          {% endfor %}
+        </div>
+
+        {% if section.settings.show_view_all and section.settings.collection.url %}
+          <div class="featured-collection__footer">
+            <a href="{{ section.settings.collection.url }}" class="featured-collection__button">
+              {{ section.settings.button_label }}
+            </a>
+          </div>
+        {% endif %}
+      {% else %}
+        {%- comment -%} Show placeholder cards when collection has no products {%- endcomment -%}
+        <div class="featured-collection__grid">
+          {% for i in (1..section.settings.products_to_show) %}
+            <div class="featured-collection__item">
+              <div class="product-card product-card--placeholder">
+                <div class="product-card__image">
                   <div class="product-card__placeholder">
                     {{ 'product-1' | placeholder_svg_tag: 'placeholder-svg' }}
                   </div>
-                {% endif %}
+                </div>
+
+                <div class="product-card__info">
+                  <h3 class="product-card__title">Product Title</h3>
+                  <div class="product-card__price">
+                    <span class="product-card__price--regular">$0.00</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+
+        <div class="featured-collection__empty-message">
+          <p>{{ 'sections.featured_collection.no_products' | t }}</p>
+        </div>
+      {% endif %}
+    {% else %}
+      {%- comment -%} Show placeholder when no collection is selected {%- endcomment -%}
+      <div class="featured-collection__grid">
+        {% for i in (1..section.settings.products_to_show) %}
+          <div class="featured-collection__item">
+            <div class="product-card product-card--placeholder">
+              <div class="product-card__image">
+                <div class="product-card__placeholder">
+                  {{ 'product-1' | placeholder_svg_tag: 'placeholder-svg' }}
+                </div>
               </div>
 
               <div class="product-card__info">
-                <h3 class="product-card__title">{{ product.title }}</h3>
-
+                <h3 class="product-card__title">Product Title</h3>
                 <div class="product-card__price">
-                  {% if product.compare_at_price > product.price %}
-                    <span class="product-card__price--sale">{{ product.price | money }}</span>
-                    <span class="product-card__price--compare">{{ product.compare_at_price | money }}</span>
-                  {% else %}
-                    <span class="product-card__price--regular">{{ product.price | money }}</span>
-                  {% endif %}
+                  <span class="product-card__price--regular">$0.00</span>
                 </div>
               </div>
-            </a>
+            </div>
           </div>
         {% endfor %}
       </div>
 
-      {% if section.settings.show_view_all and section.settings.collection.url %}
-        <div class="featured-collection__footer">
-          <a href="{{ section.settings.collection.url }}" class="featured-collection__button">
-            {{ section.settings.button_label }}
-          </a>
-        </div>
-      {% endif %}
-    {% else %}
-      <div class="featured-collection__placeholder">
+      <div class="featured-collection__empty-message">
         <p>{{ 'sections.featured_collection.no_collection' | t }}</p>
       </div>
     {% endif %}
@@ -230,16 +282,25 @@
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
   }
 
-  .featured-collection__placeholder {
-    text-align: center;
-    padding: 4rem 2rem;
-    background: #F5F1E8;
-    border-radius: 4px;
+  .product-card--placeholder {
+    pointer-events: none;
+    opacity: 0.6;
   }
 
-  .featured-collection__placeholder p {
-    font-size: 1.125rem;
-    opacity: 0.6;
+  .featured-collection__empty-message {
+    text-align: center;
+    padding: 2rem;
+    margin-top: 2rem;
+    background: rgba(196, 165, 116, 0.1);
+    border-radius: 4px;
+    border: 2px dashed rgba(196, 165, 116, 0.3);
+  }
+
+  .featured-collection__empty-message p {
+    font-size: 1rem;
+    color: #C4A574;
+    font-weight: 500;
+    margin: 0;
   }
 
   /* Tablet - 3 columns */
