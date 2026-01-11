@@ -63,7 +63,7 @@
                 <div class="before-after__image-wrapper">
                   <div class="before-after__before">
                     {% if before_img != blank %}
-                      {{ before_img | image_url: width: 800 | image_tag: loading: 'lazy', alt: 'Before' }}
+                      {{ before_img | image_url: width: 1000 | image_tag: loading: 'lazy', alt: 'Before' }}
                     {% else %}
                       <div class="before-after__placeholder before-after__placeholder--before">
                         <div class="before-after__placeholder-text">BEFORE</div>
@@ -74,7 +74,7 @@
 
                   <div class="before-after__after">
                     {% if after_img != blank %}
-                      {{ after_img | image_url: width: 800 | image_tag: loading: 'lazy', alt: 'After' }}
+                      {{ after_img | image_url: width: 1000 | image_tag: loading: 'lazy', alt: 'After' }}
                     {% else %}
                       <div class="before-after__placeholder before-after__placeholder--after">
                         <div class="before-after__placeholder-text">AFTER</div>
@@ -154,7 +154,7 @@
   }
 
   .before-after__slider-wrapper {
-    max-width: 600px;
+    max-width: 900px;
     margin: 0 auto;
   }
 
@@ -186,8 +186,8 @@
     position: relative;
     flex: 0 0 auto;
     width: 100%;
-    max-width: 600px;
-    padding-bottom: 75%;
+    max-width: 900px;
+    padding-bottom: 80%;
     overflow: hidden;
     background: #F5F1E8;
     cursor: ew-resize;
