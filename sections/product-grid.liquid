@@ -5,11 +5,43 @@
   <div class="product-grid-section__container">
     {% if section.settings.heading != blank or section.settings.description != blank %}
       <div class="product-grid-section__header">
-        {% if section.settings.heading != blank %}
-          <h2 class="product-grid-section__heading">{{ section.settings.heading }}</h2>
-        {% endif %}
-        {% if section.settings.description != blank %}
-          <div class="product-grid-section__description">{{ section.settings.description }}</div>
+        <div class="product-grid-section__header-content">
+          {% if section.settings.heading != blank %}
+            <h2 class="product-grid-section__heading">{{ section.settings.heading }}</h2>
+          {% endif %}
+          {% if section.settings.description != blank %}
+            <div class="product-grid-section__description">{{ section.settings.description }}</div>
+          {% endif %}
+        </div>
+
+        {% if section.settings.show_view_toggle %}
+          <div class="product-grid-section__view-toggle">
+            <button class="view-toggle-btn view-toggle-btn--grid-2" data-view="grid-2" aria-label="2 column grid view">
+              <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                <rect x="2" y="2" width="7" height="7" stroke="currentColor" stroke-width="1.5"/>
+                <rect x="11" y="2" width="7" height="7" stroke="currentColor" stroke-width="1.5"/>
+                <rect x="2" y="11" width="7" height="7" stroke="currentColor" stroke-width="1.5"/>
+                <rect x="11" y="11" width="7" height="7" stroke="currentColor" stroke-width="1.5"/>
+              </svg>
+            </button>
+            <button class="view-toggle-btn view-toggle-btn--grid-3 is-active" data-view="grid-3" aria-label="3 column grid view">
+              <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                <rect x="2" y="2" width="4" height="7" stroke="currentColor" stroke-width="1.5"/>
+                <rect x="8" y="2" width="4" height="7" stroke="currentColor" stroke-width="1.5"/>
+                <rect x="14" y="2" width="4" height="7" stroke="currentColor" stroke-width="1.5"/>
+                <rect x="2" y="11" width="4" height="7" stroke="currentColor" stroke-width="1.5"/>
+                <rect x="8" y="11" width="4" height="7" stroke="currentColor" stroke-width="1.5"/>
+                <rect x="14" y="11" width="4" height="7" stroke="currentColor" stroke-width="1.5"/>
+              </svg>
+            </button>
+            <button class="view-toggle-btn view-toggle-btn--list" data-view="list" aria-label="List view">
+              <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                <rect x="2" y="3" width="16" height="3" stroke="currentColor" stroke-width="1.5"/>
+                <rect x="2" y="8.5" width="16" height="3" stroke="currentColor" stroke-width="1.5"/>
+                <rect x="2" y="14" width="16" height="3" stroke="currentColor" stroke-width="1.5"/>
+              </svg>
+            </button>
+          </div>
         {% endif %}
       </div>
     {% endif %}
@@ -132,8 +164,45 @@
   }
 
   .product-grid-section__header {
-    text-align: center;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
     margin-bottom: 3rem;
+    gap: 2rem;
+  }
+
+  .product-grid-section__header-content {
+    flex: 1;
+    text-align: center;
+  }
+
+  .product-grid-section__view-toggle {
+    display: flex;
+    gap: 0.5rem;
+    flex-shrink: 0;
+  }
+
+  .view-toggle-btn {
+    width: 40px;
+    height: 40px;
+    padding: 0;
+    border: 1px solid #4A3F35;
+    background: transparent;
+    color: #4A3F35;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .view-toggle-btn:hover {
+    background: #F5F1E8;
+  }
+
+  .view-toggle-btn.is-active {
+    background: #4A3F35;
+    color: #fff;
   }
 
   .product-grid-section__heading {
@@ -455,7 +524,14 @@
 
   @media screen and (max-width: 768px) {
     .product-grid-section__header {
+      flex-direction: column;
+      align-items: center;
       margin-bottom: 2rem;
+    }
+
+    .product-grid-section__view-toggle {
+      order: -1;
+      margin-bottom: 1.5rem;
     }
 
     .product-grid-section__heading {
@@ -499,6 +575,55 @@
   }
 {% endstylesheet %}
 
+{% javascript %}
+document.addEventListener('DOMContentLoaded', function() {
+  const sections = document.querySelectorAll('.product-grid-section');
+
+  sections.forEach(function(section) {
+    const toggleButtons = section.querySelectorAll('.view-toggle-btn');
+    const productGrid = section.querySelector('.product-grid');
+    const productCards = section.querySelectorAll('.product-card');
+
+    if (!toggleButtons.length || !productGrid) return;
+
+    // Get saved view from localStorage or default to grid-3
+    const sectionId = section.id;
+    const savedView = localStorage.getItem('productView_' + sectionId) || 'grid-3';
+
+    // Apply saved view on load
+    applyView(savedView);
+
+    // Add click handlers to toggle buttons
+    toggleButtons.forEach(function(button) {
+      button.addEventListener('click', function() {
+        const view = this.getAttribute('data-view');
+        applyView(view);
+        localStorage.setItem('productView_' + sectionId, view);
+      });
+    });
+
+    function applyView(view) {
+      // Update button states
+      toggleButtons.forEach(function(btn) {
+        if (btn.getAttribute('data-view') === view) {
+          btn.classList.add('is-active');
+        } else {
+          btn.classList.remove('is-active');
+        }
+      });
+
+      // Update grid classes
+      productGrid.className = 'product-grid product-grid--' + view;
+
+      // Update card classes
+      productCards.forEach(function(card) {
+        card.className = 'product-card product-card--' + view;
+      });
+    }
+  });
+});
+{% endjavascript %}
+
 {% schema %}
 {
   "name": "Product Grid",
@@ -529,9 +654,16 @@
       "content": "Layout"
     },
     {
+      "type": "checkbox",
+      "id": "show_view_toggle",
+      "label": "Show view toggle buttons",
+      "default": true,
+      "info": "Allow customers to switch between grid and list views"
+    },
+    {
       "type": "radio",
       "id": "layout",
-      "label": "Layout style",
+      "label": "Default layout style",
       "options": [
         {
           "value": "grid-2",
@@ -546,7 +678,8 @@
           "label": "List view"
         }
       ],
-      "default": "grid-3"
+      "default": "grid-3",
+      "info": "Initial view when page loads"
     },
     {
       "type": "range",
