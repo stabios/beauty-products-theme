@@ -114,6 +114,16 @@
         "padding_bottom": 80
       }
     },
+    "video": {
+      "type": "video",
+      "settings": {
+        "heading": "Watch Our Story",
+        "description": "<p>Discover the science and passion behind our skincare products</p>",
+        "background_color": "#F5F1E8",
+        "padding_top": 60,
+        "padding_bottom": 60
+      }
+    },
     "main": {
       "type": "hello-world",
       "settings": {}
@@ -123,6 +133,7 @@
     "hero-slideshow",
     "featured-collection",
     "before-after",
+    "video",
     "main"
   ]
 }
